@@ -1,0 +1,12 @@
+{
+  "coc.preferences.willSaveHandlerTimeout": 5000,
+  "python.sortImports.path": "/usr/local/bin/isort",
+  "python.formatting.provider": "black",
+  "python.formatting.blackPath": "/usr/local/bin/black",
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Path": "/usr/local/bin/flake8",
+  "python.linting.mypyEnabled": true,
+  "python.linting.mypyPath": "/usr/local/bin/mypy",
+  "diagnostic.virtualText": false,
+  "diagnostic.checkCurrentLine": true
+}
