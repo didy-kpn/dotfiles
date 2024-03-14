@@ -1,0 +1,65 @@
+[env]
+TERM = 'alacritty'
+
+[shell]
+program = '/usr/local/bin/zsh'
+
+[window]
+decorations = 'full'
+decorations_theme_variant = 'Dark'
+
+[font]
+size = 12
+
+[font.normal]
+family = 'GoMono Nerd Font'
+style = 'Regular'
+
+[font.bold]
+family = 'GoMono Nerd Font'
+style = 'Bold'
+
+[font.italic]
+family = 'GoMono Nerd Font'
+style = 'Italic'
+
+[font.bold_italic]
+family = 'GoMono Nerd Font'
+style = 'Bold Italic'
+
+# Tango Dark
+[colors]
+draw_bold_text_with_bright_colors = true
+
+[colors.primary]
+foreground = '#fffefe'
+background = '#000000'
+
+[colors.cursor]
+text = '#000000'
+cursor = '#fffefe'
+
+[colors.selection]
+text = '#000000'
+background = '#c1ddff'
+
+[colors.normal]
+black = '#000000'
+red = '#d71e00'
+green = '#5da602'
+yellow = '#cfad00'
+blue = '#417ab3'
+magenta = '#88658d'
+cyan = '#00a7aa'
+white = '#dbded8'
+
+[colors.bright]
+black = '#676965'
+red = '#f44135'
+green = '#98e342'
+yellow = '#fcea60'
+blue = '#83afd8'
+magenta = '#bc93b6'
+cyan = '#37e5e7'
+white = '#f1f1ef'
+
