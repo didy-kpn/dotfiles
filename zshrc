@@ -14,11 +14,31 @@ export XDG_CONFIG_HOME=$HOME/.config
 # nodejsの環境パスを通す
 export PATH=$HOME/.nodebrew/current/bin:$PATH
 
+export PATH=$HOME/.local/share/solana/install/active_release/bin:$PATH
+source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+export GOOGLE_APPLICATION_CREDENTIALS=$HOME/.config/gcloud/application_default_credentials.json
+
+# openssl
+export PATH=/usr/local/opt/openssl@1.1/bin:$PATH
+export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
+export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
+
 # zplug 初期設定
 export ZPLUG_HOME=/usr/local/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
 export PATH=$HOME/.local/share/solana/install/active_release/bin:$PATH
+
+# php
+export PATH="/usr/local/opt/php@8.1/bin:$PATH"
+export PATH="/usr/local/opt/php@8.1/sbin:$PATH"
+
+export PATH="/Applications/LibreOffice.app/Contents/MacOS:$PATH"
+
+export PATH="/usr/local/opt/php@8.0/bin:$PATH"
+export PATH="/usr/local/opt/php@8.0/sbin:$PATH"
+export LDFLAGS="-L/usr/local/opt/php@8.0/lib"
+export CPPFLAGS="-I/usr/local/opt/php@8.0/include"
 
 # rbenvにパスを通す
 [[ -d ~/.rbenv  ]] && \
@@ -54,6 +74,7 @@ autoload -Uz colors
 colors
 
 # 補完有効
+fpath+=~/.zfunc
 autoload -Uz compinit
 compinit
 
@@ -113,7 +134,6 @@ alias reload='source ~/.zshrc'
 
 # TODO zshプラグイン
 zplug "plugins/git",  from:oh-my-zsh
-zplug "plugins/git-flow",  from:oh-my-zsh
 zplug "plugins/brew",  from:oh-my-zsh
 zplug "plugins/vi-mode",  from:oh-my-zsh
 
@@ -145,3 +165,11 @@ source "/usr/local/opt/fzf/shell/key-bindings.zsh"
 
 # gcloudの補完
 source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+
+PATH="/Users/note066/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/Users/note066/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/Users/note066/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/Users/note066/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/Users/note066/perl5"; export PERL_MM_OPT;
+
+TIMEFMT=$'\n\n========================\nProgram : %J\nCPU     : %P\nuser    : %*Us\nsystem  : %*Ss\ntotal   : %*Es\n========================\n'

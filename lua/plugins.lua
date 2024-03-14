@@ -12,7 +12,7 @@ paq 'tpope/vim-commentary'
 paq 'i-amd3/BlockDiff'
 
 paq {'neoclide/coc.nvim', branch='release'}
-paq 'nvim-treesitter/nvim-treesitter'
+paq {'nvim-treesitter/nvim-treesitter', run = function() vim.cmd 'TSUpdate' end }
 
 paq 'w0ng/vim-hybrid'
 paq 'PHSix/nvim-hybrid'
@@ -28,6 +28,10 @@ paq 'tpope/vim-dadbod'
 paq 'kristijanhusak/vim-dadbod-ui'
 
 paq 'Shougo/defx.nvim'
+
+paq 'ellisonleao/glow.nvim'
+
+paq 'github/copilot.vim'
 
 -- Plugin Config
 require 'config.coc'

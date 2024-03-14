@@ -17,7 +17,7 @@ nvim_set_keymap('n', '<Leader>e', '<CMD>Defx<CR>', {noremap = true, silent = tru
 
 function _G.defx_settings()
   buf_set_keymap(0, 'n', 'q', 'defx#do_action("quit")', {noremap = true, silent = true, expr = true })
-  buf_set_keymap(0, 'n', 'o', 'defx#is_directory() ? defx#do_action("open_tree") : defx#do_action("drop")', {noremap = true, silent = true, expr = true })
+  buf_set_keymap(0, 'n', 'o', 'defx#is_directory() ? defx#do_action("open_or_close_tree") : defx#do_action("drop")', {noremap = true, silent = true, expr = true })
   buf_set_keymap(0, 'n', '<CR>', 'defx#do_action("drop")', {noremap = true, silent = true, expr = true })
 
   buf_set_keymap(0, 'n', 'K', 'defx#do_action("new_directory")', {noremap = true, silent = true, expr = true })

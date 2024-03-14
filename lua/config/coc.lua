@@ -2,7 +2,7 @@
 local api, bo, cmd, fn, g, o = vim.api, vim.bo, vim.cmd, vim.fn, vim.g, vim.o
 local nvim_set_keymap = vim.api.nvim_set_keymap
 
-g.coc_global_extensions = { 'coc-json', 'coc-yaml', 'coc-pyright', 'coc-rust-analyzer' }
+g.coc_global_extensions = { 'coc-json', 'coc-yaml', 'coc-pyright', 'coc-rust-analyzer', 'coc-deno' }
 
 function _G.check_back_space()
   local col = fn.col(".") - 1
