@@ -28,8 +28,8 @@ inline = 'eval "$(mise activate zsh)"'
 
 # Completions
 # -----------
-[plugins.zsh-autocomplete]
-github = 'marlonrichert/zsh-autocomplete'
+# [plugins.zsh-autocomplete]
+# github = 'marlonrichert/zsh-autocomplete'
 
 [plugins.zsh-autosuggestions]
 github = 'zsh-users/zsh-autosuggestions'
