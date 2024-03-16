@@ -55,4 +55,6 @@ opt.list = true
 -- TODO:
 -- opt.listchars = { tab = ">.", trail = "_", extends = ">", precedes = "<", nbsp = "%" }
 
+opt.relativenumber = false
+
 opt.formatoptions:append({ "r" })
