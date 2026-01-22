@@ -6,5 +6,13 @@ export PATH=$HOME/.local/bin:$PATH
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/opt/gnu-tar/libexec/gnubin:$PATH
 export PATH=$HOME/.cargo/bin:$PATH
+# 削除対象
+export PAHT=$HOME/.bun/bin:$PATH
 
 export XDG_CONFIG_HOME=$HOME/.config
+# 削除対象
+export ENCRYPTION_NONCE="b9c37287aa99bf5676a63222"
+export ENCRYPTION_KEY="8f63fdb1107f031e386c736e83ddcd93945fabc6153a396b4c5cb000a6f5e0cb"
+export PATH="/usr/local/opt/php@8.2/bin:$PATH"
+export PATH="/usr/local/opt/php@8.2/sbin:$PATH"
+export PATH="$HOME/.private/git-worktree-runner/bin:$PATH"

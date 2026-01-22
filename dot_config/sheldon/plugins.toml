@@ -12,25 +12,8 @@
 
 shell = 'zsh'
 
-[templates]
-defer = '{{ hooks?.pre | nl }}{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}{{ hooks?.post | nl }}'
-
-# Source
-# -----------
-[plugins.zsh-defer]
-github = 'romkatv/zsh-defer'
-
 # Prompt
 # -----------
-[plugins.zellij]
-inline = 'eval "$(zellij setup --generate-auto-start zsh)"'
-
-[plugins.starship]
-inline = 'eval "$(starship init zsh)"'
-
-[plugins.mise]
-inline = 'eval "$(mise activate zsh)"'
-
 # Completions
 # -----------
 # [plugins.zsh-autocomplete]
