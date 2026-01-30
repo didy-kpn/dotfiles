@@ -16,19 +16,14 @@ if command -v zoxide >/dev/null 2>&1; then
 fi
 
 if command -v atuin >/dev/null 2>&1; then
-  eval "$(atuin init zsh)"
+  eval "$(atuin init zsh --disable-up-arrow)"
 fi
 
 if command -v carapace >/dev/null 2>&1; then
-  export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
-  zstyle ':completion:*' format $'(%d)'
-  zstyle ':completion:*:descriptions' format $'(%d)'
-  zstyle ':completion:*' group-name ''
-  zstyle ':completion:*:matches' group 'yes'
-  zstyle ':completion:*:options' description 'yes'
-  zstyle ':completion:*:options' auto-description '%d'
-  compinit 2>/dev/null
-  carapace _carapace
+  autoload -U compinit && compinit
+  export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
+  zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+  source <(carapace _carapace)
 fi
 
 eval "$(sheldon source)"

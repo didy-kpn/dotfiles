@@ -35,7 +35,10 @@
     "codex":          "latest",
     "gemini-cli-bin": "latest",
     "neovim":         "latest",
-    "postgresql":     "latest"
+    "postgresql":     "latest",
+    "nodejs":         "latest",
+    "yarn":           "latest",
+    "pnpm":           "latest"
   },
   "shell": {
     "init_hook": [

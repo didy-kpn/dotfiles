@@ -13,7 +13,7 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
 
 - [x] (2026-01-21 10:52) ExecPlan を作成して合意を取る。
 - [x] (2026-01-21 10:53) yabai/skhd を撤去する（Brewfile と設定ファイル）。
-- [ ] (2026-01-21 17:05) devbox の導入方針を確定し、mise からの移行を開始する（進行中: Homebrew を cask-only 化、zshrc に devbox global shellenv を追加、mise 連携を削除、devbox global の生成ファイルを取り込み済み。npm グローバルは README から削除し、別途運用方針で対応）。 
+- [ ] (2026-01-28 10:40) devbox の導入方針を確定し、mise からの移行を開始する（進行中: Homebrew を cask-only 化、zshrc に devbox global shellenv を追加、mise 連携を削除、devbox global の生成ファイルを取り込み済み。npm グローバルは README から削除し、別途運用方針で対応）。 
 - [ ] (2026-01-21 17:05) zsh 設定を整理する（devbox/ツール連携含む。進行中: carapace/zoxide/atuin の初期化、eza/bat/fd/rg のエイリアス整理、peco/mvim の削除）。
 - [ ] (2026-01-21 17:05) Helix/rio/yazi/zellij/lazygit を導入・設定する。
 
@@ -64,7 +64,7 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
 
 
 - まだ途中。最初のマイルストーンである yabai/skhd の撤去が完了した。
-- まだ途中。Homebrew の cask-only 化、devbox 連携準備、run_once_setup.sh の導入が進んだ。zsh の整理が進行中。
+- まだ途中。Homebrew の cask-only 化と `brew bundle --global` の適用が完了。devbox 連携準備、run_once_setup.sh の導入が進んだ。zsh の整理が進行中。
 
 ## Context and Orientation
 
@@ -103,6 +103,11 @@ This ExecPlan is a living document. The sections `Progress`, `Surprises & Discov
 - `dot_Brewfile` に SketchyBar と AeroSpace を追加し、Homebrew の tap を調整。
 - `run_once_setup.sh` に Xcode CLI Tools のインストールを追加。
 - zsh のエイリアスと補完の整理を進めた（eza/rg/fd/bat、carapace/atuin/zoxide、peco/mvim の撤去）。
+
+5) 直近の更新（2026-01-28）
+- ターミナルを rio に切り替え、Brewfile を完全修飾で安定化。
+- `homebrew/cask-fonts` の廃止に対応して tap を削除。
+- `chezmoi apply --force` と `brew bundle --global` を正常完了。
 
 次にやるべきこと（短期）
 - devbox の npm グローバル導入コマンドを実行し、必要なら実行結果をメモする（codex/gemini/opencode）。
