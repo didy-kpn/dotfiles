@@ -1,0 +1,7 @@
+
+[env]
+
+[tools]
+"npm:@github/copilot" = "latest"
+"npm:@openai/codex" = "latest"
+"npm:opencode-ai" = "latest"

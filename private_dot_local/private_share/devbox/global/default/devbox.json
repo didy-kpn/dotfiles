@@ -19,7 +19,6 @@
     "chezmoi":        "latest",
     "zellij":         "latest",
     "lazygit":        "latest",
-    "helix":          "latest",
     "difftastic":     "latest",
     "starship":       "latest",
     "sheldon":        "latest",
@@ -31,14 +30,16 @@
     "zoxide":         "latest",
     "atuin":          "latest",
     "carapace":       "latest",
-    "jujutsu":        "latest",
-    "codex":          "latest",
-    "gemini-cli-bin": "latest",
     "neovim":         "latest",
     "postgresql":     "latest",
     "nodejs":         "latest",
     "yarn":           "latest",
-    "pnpm":           "latest"
+    "pnpm":           "latest",
+    "yazi":           "latest",
+    "imagemagick":    "latest",
+    "openjdk":        "latest",
+    "sqlite":         "latest",
+    "mise":           "latest"
   },
   "shell": {
     "init_hook": [

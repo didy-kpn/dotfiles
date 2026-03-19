@@ -1,3 +1,17 @@
+# git gtr completion
+if command -v git-gtr >/dev/null 2>&1; then
+  git_gtr_bin=$(command -v git-gtr)
+  git_gtr_root=${git_gtr_bin:h:h}
+  git_gtr_completions="${git_gtr_root}/completions"
+  if [[ -d "${git_gtr_completions}" ]]; then
+    fpath=("${git_gtr_completions}" $fpath)
+  fi
+fi
+zstyle ':completion:*:*:git:*' user-commands gtr:'Git worktree management'
+
+# completion system
+autoload -U compinit && compinit
+
 # devbox global shellenv
 if command -v devbox >/dev/null 2>&1; then
   eval "$(devbox global shellenv --init-hook)"
@@ -12,7 +26,7 @@ if command -v starship >/dev/null 2>&1; then
 fi
 
 if command -v zoxide >/dev/null 2>&1; then
-  eval "$(zoxide init zsh)"
+  eval "$(zoxide init zsh --cmd cd)"
 fi
 
 if command -v atuin >/dev/null 2>&1; then
@@ -20,10 +34,17 @@ if command -v atuin >/dev/null 2>&1; then
 fi
 
 if command -v carapace >/dev/null 2>&1; then
-  autoload -U compinit && compinit
   export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
   zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
-  source <(carapace _carapace)
+  source <(carapace _carapace zsh)
+fi
+
+autoload -Uz _git
+compdef _git git
+
+if [[ -n "${git_gtr_completions:-}" && -r "${git_gtr_completions}/_git-gtr" ]]; then
+  autoload -Uz _git-gtr
+  compdef _git-gtr git-gtr
 fi
 
 eval "$(sheldon source)"
