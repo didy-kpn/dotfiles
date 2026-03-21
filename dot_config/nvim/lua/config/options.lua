@@ -1,60 +1,78 @@
--- Options are automatically loaded before lazy.nvim startup
--- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
--- Add any additional options here
+local g = vim.g
+local opt = vim.opt
 
--- helper
-local g, opt = vim.g, vim.opt
+local undodir = vim.fn.stdpath("state") .. "/undo"
+vim.fn.mkdir(undodir, "p")
 
 g.mapleader = " "
+g.maplocalleader = "\\"
 
 vim.scriptencoding = "utf-8"
 opt.encoding = "utf-8"
 opt.fileencoding = "utf-8"
+opt.termguicolors = true
 
 opt.number = true
+opt.relativenumber = true
+opt.signcolumn = "yes"
+opt.cursorline = true
+opt.scrolloff = 8
+opt.sidescrolloff = 8
+opt.wrap = false
+opt.linebreak = true
+opt.list = true
+opt.listchars = {
+  tab = ">-",
+  trail = ".",
+  nbsp = "_",
+}
 
-opt.title = true
-opt.autoindent = true
-opt.smartindent = true
-opt.hlsearch = true
-
--- TODO:
-opt.backup = false
--- opt.backupdir = os.getenv("XDG_CONFIG_HOME") .. "/nvim/backup"
-
-opt.swapfile = false
--- opt.directory = os.getenv("XDG_CONFIG_HOME") .. "/nvim/swap"
-
-opt.undofile = false
--- opt.undodir = os.getenv("XDG_CONFIG_HOME") .. "/nvim/undo"
-
-opt.hidden = true
 opt.clipboard = "unnamedplus"
-opt.showcmd = true
-opt.cmdheight = 0
-opt.laststatus = 2
-opt.expandtab = true
-opt.scrolloff = 10
+opt.mouse = ""
+opt.hidden = true
+opt.splitbelow = true
+opt.splitright = true
+opt.splitkeep = "screen"
 opt.inccommand = "split"
-opt.ignorecase = true
-opt.smarttab = true
-opt.breakindent = true
+opt.confirm = true
+
+opt.expandtab = true
+opt.autoindent = true
 opt.shiftwidth = 2
 opt.tabstop = 2
 opt.softtabstop = 2
-opt.wrap = false
+opt.smartindent = true
+opt.breakindent = true
 opt.backspace = { "start", "eol", "indent" }
-opt.splitbelow = true
-opt.splitkeep = "cursor"
-opt.mouse = ""
-opt.cursorline = true
-opt.ambiwidth = "single"
-opt.signcolumn = "yes"
-opt.termguicolors = true
-opt.list = true
--- TODO:
--- opt.listchars = { tab = ">.", trail = "_", extends = ">", precedes = "<", nbsp = "%" }
 
-opt.relativenumber = false
+opt.ignorecase = true
+opt.smartcase = true
+opt.hlsearch = false
+opt.incsearch = true
 
-opt.formatoptions:append({ "r" })
+opt.pumheight = 12
+opt.completeopt = { "menu", "menuone", "noselect" }
+opt.updatetime = 200
+opt.timeoutlen = 300
+
+opt.swapfile = false
+opt.backup = false
+opt.undofile = true
+opt.undodir = undodir
+
+opt.foldmethod = "expr"
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+opt.foldlevel = 99
+opt.foldlevelstart = 99
+
+opt.fillchars = {
+  eob = " ",
+  fold = " ",
+  foldopen = "-",
+  foldclose = "+",
+  foldsep = " ",
+}
+
+opt.shortmess:append("c")
+opt.formatoptions:remove("o")
+opt.formatoptions:append("rnj")
