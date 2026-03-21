@@ -62,6 +62,10 @@ Helix からの移行を前提に、Neovim 0.11 系で使いやすい最小構�
   説明: 補完 UI と LSP 補完を提供します。
   利用理由: `nvim-cmp` より軽快で、Neovim 0.11 系との相性が良く、候補一覧にソース名を出して `phpactor` と snippet を見分けやすくできるためです。
 
+- `zbirenbaum/copilot.lua`
+  説明: GitHub Copilot のインライン提案 UI を提供します。
+  利用理由: `copilot-language-server` 単体よりグレー表示の補完が安定しやすいためです。提案は `tokyonight` に合わせて水色寄りに強調しています。
+
 - `stevearc/conform.nvim`
   説明: 保存時フォーマットを担当します。
   利用理由: LSP format と外部 formatter の切り替えが扱いやすいためです。
@@ -148,8 +152,8 @@ Helix からの移行を前提に、Neovim 0.11 系で使いやすい最小構�
 - `[d` `]d`: diagnostics 前後移動
 - `<leader>e`: 行 diagnostics 表示
 - `<leader>xq`: location list に diagnostics を流す
-- `<C-f>` (`insert`): copilot などの inline completion を受け入れる
-- `<C-g>` (`insert`): inline completion 候補を切り替える
+- `<C-f>` (`insert`): Copilot の提案を受け入れる
+- `<C-g>` (`insert`): Copilot の次候補へ切り替える
 - `blink.cmp` の候補一覧末尾: 補完ソース名を表示 (`LSP`, `Snippets`, `Buffer`, `Path` など)
 
 ### Git
@@ -179,9 +183,13 @@ Helix からの移行を前提に、Neovim 0.11 系で使いやすい最小構�
 
 ## 補足
 
-- LSP の有効化対象は `lua_ls`, `rust_analyzer`, `gopls`, `pyright`, `jsonls`, `yamlls`, `bashls`, `taplo`, `marksman`, `phpactor`, `copilot`, `typos_lsp` です。
-- Mason の追加導入対象として `php-debug-adapter` も含めています。
+- LSP の有効化対象は `lua_ls`, `rust_analyzer`, `gopls`, `pyright`, `jsonls`, `yamlls`, `bashls`, `taplo`, `marksman`, `phpactor`, `intelephense`, `typos_lsp` です。
+- Mason の追加導入対象として `php-debug-adapter` と `intelephense` も含めています。
 - スコープ表示は `indent-blankline.nvim`、括弧の色分けは `rainbow-delimiters.nvim`、パンくずは `dropbar.nvim` に分担しています。
-- `phpactor` は Laravel 向けに `%project_root%/_ide_helper.php` と `%project_root%/_ide_helper_models.php` を `indexer.stub_paths` と `worse_reflection.additive_stubs` に追加しています。
+- `phpactor` は Laravel 向けに、LSP が解決した project root 配下の `_ide_helper.php` と `_ide_helper_models.php` が存在する場合だけ `indexer.stub_paths` と `worse_reflection.additive_stubs` に追加しています。
+- `phpactor` の indexer は Laravel プロジェクト向けに `vendor/composer`, `storage/framework`, `bootstrap/cache`, `node_modules`, `public/build` などを除外しています。
+- `phpactor` は負荷軽減のため `vendor` 全体を index 対象から外し、`file_events` と更新時 diagnostics を止めています。Laravel では補完と診断を主に `intelephense` に任せています。
+- PHP 系 LSP の root は `.git` より `composer.json` と `artisan` を優先するため、Laravel では `backend` をプロジェクトルートとして扱います。
+- PHP では補完を `intelephense` に寄せるため、`phpactor` の `completionProvider` は無効化しています。
 - formatter は `stylua`, `shfmt`, `prettier`, `rustfmt`, `gofmt`, `ruff_format`, `taplo` を想定しています。
 - 外部ツールの導入は `:Mason` から追加できます。

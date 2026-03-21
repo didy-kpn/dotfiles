@@ -1,10 +1,40 @@
 local augroup = vim.api.nvim_create_augroup("nvim-config", { clear = true })
 
+local function set_copilot_highlight()
+  vim.api.nvim_set_hl(0, "CopilotSuggestion", {
+    fg = "#89ddff",
+    bg = "#1f2335",
+    italic = false,
+    bold = true,
+    underline = true,
+    undercurl = false,
+    nocombine = true,
+  })
+end
+
+set_copilot_highlight()
+
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = augroup,
   callback = function()
     vim.highlight.on_yank({ higroup = "Visual", timeout = 150 })
   end,
+})
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = augroup,
+  callback = set_copilot_highlight,
+})
+
+vim.api.nvim_create_autocmd({ "VimEnter", "InsertEnter" }, {
+  group = augroup,
+  callback = set_copilot_highlight,
+})
+
+vim.api.nvim_create_autocmd("User", {
+  group = augroup,
+  pattern = "LazyDone",
+  callback = set_copilot_highlight,
 })
 
 vim.api.nvim_create_autocmd("VimResized", {
@@ -17,6 +47,17 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "php",
   callback = function()
     vim.opt_local.autoindent = true
+  end,
+})
+
+vim.api.nvim_create_autocmd("User", {
+  group = augroup,
+  pattern = "BlinkCmpMenuOpen",
+  callback = function()
+    local ok, suggestion = pcall(require, "copilot.suggestion")
+    if ok then
+      suggestion.dismiss()
+    end
   end,
 })
 
@@ -48,14 +89,22 @@ vim.api.nvim_create_autocmd("LspAttach", {
       })
     end, "Format buffer")
 
-    if vim.lsp.inline_completion and client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion, buf) then
-      vim.lsp.inline_completion.enable(true, { bufnr = buf })
-      map("<C-f>", vim.lsp.inline_completion.get, "Accept inline completion", "i")
-      map("<C-g>", vim.lsp.inline_completion.select, "Next inline completion", "i")
-    end
-
     if client and client:supports_method("textDocument/inlayHint") then
       vim.lsp.inlay_hint.enable(true, { bufnr = buf })
     end
   end,
 })
+
+vim.keymap.set("i", "<C-f>", function()
+  local ok, suggestion = pcall(require, "copilot.suggestion")
+  if ok and suggestion.is_visible() then
+    suggestion.accept()
+  end
+end, { silent = true, desc = "Accept Copilot suggestion" })
+
+vim.keymap.set("i", "<C-g>", function()
+  local ok, suggestion = pcall(require, "copilot.suggestion")
+  if ok and suggestion.is_visible() then
+    suggestion.next()
+  end
+end, { silent = true, desc = "Next Copilot suggestion" })

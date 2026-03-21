@@ -331,7 +331,7 @@ return {
     },
     opts = {
       ensure_installed = {
-        "copilot-language-server",
+        "intelephense",
         "php-debug-adapter",
         "phpactor",
         "typos-lsp",
@@ -348,6 +348,7 @@ return {
       ensure_installed = {
         "bashls",
         "gopls",
+        "intelephense",
         "jsonls",
         "lua_ls",
         "marksman",
@@ -357,7 +358,6 @@ return {
         "taplo",
         "typos_lsp",
         "yamlls",
-        "copilot",
       },
     },
   },
@@ -408,6 +408,44 @@ return {
     opts_extend = { "sources.default" },
   },
   {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    opts = {
+      panel = {
+        enabled = false,
+      },
+      suggestion = {
+        enabled = true,
+        auto_trigger = true,
+        hide_during_completion = true,
+        debounce = 75,
+        keymap = {
+          accept = false,
+          accept_word = false,
+          accept_line = false,
+          next = false,
+          prev = false,
+          dismiss = false,
+        },
+      },
+      filetypes = {
+        yaml = true,
+        markdown = true,
+        help = false,
+        gitcommit = true,
+        gitrebase = false,
+        hgcommit = false,
+        svn = false,
+        cvs = false,
+        ["."] = false,
+      },
+    },
+    config = function(_, opts)
+      require("copilot").setup(opts)
+    end,
+  },
+  {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
@@ -423,24 +461,65 @@ return {
       })
 
       local capabilities = require("blink.cmp").get_lsp_capabilities()
+      local php_root = function(bufnr, on_dir)
+        local fname = vim.api.nvim_buf_get_name(bufnr)
+        on_dir(
+          vim.fs.root(fname, { "composer.json", "artisan", ".phpactor.json", ".phpactor.yml" })
+            or vim.fs.root(fname, { ".git" })
+        )
+      end
       local servers = {
         bashls = {},
-        copilot = {},
         gopls = {},
+        intelephense = {
+          root_dir = php_root,
+        },
         jsonls = {},
         marksman = {},
         phpactor = {
+          root_dir = php_root,
           init_options = {
-            ["indexer.stub_paths"] = {
-              "%project_root%/_ide_helper.php",
-              "%project_root%/_ide_helper_models.php",
+            ["indexer.exclude_patterns"] = {
+              "/vendor/**/*",
+              "/vendor/**/Tests/**/*",
+              "/vendor/**/tests/**/*",
+              "/vendor/composer/**/*",
+              "/vendor/rector/rector/stubs-rector",
+              "/bootstrap/cache/**/*",
+              "/storage/framework/**/*",
+              "/storage/logs/**/*",
+              "/node_modules/**/*",
+              "/public/build/**/*",
             },
-            ["worse_reflection.additive_stubs"] = {
-              "%project_root%/_ide_helper.php",
-              "%project_root%/_ide_helper_models.php",
-            },
-            ["language_server.file_events"] = true,
+            ["indexer.reference_finder.deep"] = false,
+            ["indexer.implementation_finder.deep"] = false,
+            ["language_server.file_events"] = false,
+            ["language_server.diagnostics_on_update"] = false,
+            ["language_server.diagnostics_on_open"] = false,
+            ["language_server_worse_reflection.diagnostics.enable"] = false,
+            ["language_server_highlight.enabled"] = false,
           },
+          on_new_config = function(new_config, root_dir)
+            local ide_helper = root_dir .. "/_ide_helper.php"
+            local ide_helper_models = root_dir .. "/_ide_helper_models.php"
+            local stub_paths = {}
+
+            if vim.fn.filereadable(ide_helper) == 1 then
+              table.insert(stub_paths, ide_helper)
+            end
+
+            if vim.fn.filereadable(ide_helper_models) == 1 then
+              table.insert(stub_paths, ide_helper_models)
+            end
+
+            new_config.init_options = vim.tbl_deep_extend("force", new_config.init_options or {}, {
+              ["indexer.stub_paths"] = stub_paths,
+              ["worse_reflection.additive_stubs"] = stub_paths,
+            })
+          end,
+          on_attach = function(client)
+            client.server_capabilities.completionProvider = nil
+          end,
         },
         pyright = {},
         rust_analyzer = {},
