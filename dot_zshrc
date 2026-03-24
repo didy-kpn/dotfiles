@@ -49,6 +49,28 @@ fi
 
 eval "$(sheldon source)"
 
+if command -v abbr >/dev/null 2>&1; then
+  {
+    abbr add --session --quiet --force ...='cd ../../'
+    abbr add --session --quiet --force ....='cd ../../../'
+    abbr add --session --quiet --force ll='eza --icons -lah'
+    abbr add --session --quiet --force llt='eza --icons -lah -T -L2'
+    abbr add --session --quiet --force rm='rm -i'
+    abbr add --session --quiet --force cp='cp -i'
+    abbr add --session --quiet --force mv='mv -i'
+    abbr add --session --quiet --force mkdir='mkdir -p'
+    abbr add --session --global --quiet --force L='| less'
+    abbr add --session --global --quiet --force G='| grep'
+    abbr add --session --global --quiet --force P='| fzf'
+    abbr add --session --quiet --force reload='source ~/.zshrc'
+    abbr add --session --quiet --force ls='eza --icons'
+    abbr add --session --quiet --force vim='nvim'
+    abbr add --session --quiet --force cat='bat'
+    abbr add --session --quiet --force find='fd'
+    abbr add --session --quiet --force grep='rg'
+  } >/dev/null 2>&1
+fi
+
 # viライクな操作
 bindkey -v
 
@@ -75,8 +97,6 @@ setopt share_history
 
 # cdを使わずディレクトリ移動
 setopt auto_cd
-alias ...='cd ../../'
-alias ....='cd ../../../'
 
 # cd移動先をスタックに追加'cd +<Tab>'
 setopt auto_pushd
@@ -86,24 +106,10 @@ setopt pushd_ignore_dups
 setopt no_beep
 
 
-alias ll='eza --icons -lah'
-alias llt='eza --icons -lah -T -L2'
 
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
 
-alias mkdir='mkdir -p'
 
-alias -g L='| less'
-alias -g G='| grep'
-alias -g P='| fzf'
 
 # 再読み込み
-alias reload='source ~/.zshrc'
 
 # modern replacements
-alias ls='eza --icons'
-alias cat='bat'
-alias find='fd'
-alias grep='rg'

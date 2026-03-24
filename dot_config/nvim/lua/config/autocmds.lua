@@ -61,6 +61,17 @@ vim.api.nvim_create_autocmd("User", {
   end,
 })
 
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+  group = augroup,
+  pattern = "*.php",
+  callback = function()
+    local ok, lint = pcall(require, "lint")
+    if ok then
+      lint.try_lint("phpstan")
+    end
+  end,
+})
+
 vim.api.nvim_create_autocmd("LspAttach", {
   group = augroup,
   callback = function(args)

@@ -496,6 +496,8 @@ return {
             ["language_server.file_events"] = false,
             ["language_server.diagnostics_on_update"] = false,
             ["language_server.diagnostics_on_open"] = false,
+            ["language_server.diagnostics_on_save"] = false,
+            ["language_server.diagnostic_providers"] = {},
             ["language_server_worse_reflection.diagnostics.enable"] = false,
             ["language_server_highlight.enabled"] = false,
           },
@@ -557,36 +559,94 @@ return {
     "stevearc/conform.nvim",
     event = { "BufWritePre" },
     cmd = "ConformInfo",
-    opts = {
-      formatters_by_ft = {
-        bash = { "shfmt" },
-        css = { "prettier" },
-        go = { "gofmt" },
-        html = { "prettier" },
-        javascript = { "prettier" },
-        javascriptreact = { "prettier" },
-        json = { "prettier" },
-        lua = { "stylua" },
-        markdown = { "prettier" },
-        python = { "ruff_format" },
-        rust = { "rustfmt" },
-        sh = { "shfmt" },
-        toml = { "taplo" },
-        typescript = { "prettier" },
-        typescriptreact = { "prettier" },
-        yaml = { "prettier" },
-        zsh = { "shfmt" },
-      },
-      format_on_save = function(bufnr)
-        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-          return
+    opts = function()
+      local util = require("conform.util")
+
+      return {
+        formatters = {
+          pint = {
+            command = util.find_executable({ "vendor/bin/pint" }, "pint"),
+            cwd = util.root_file({ "pint.json", "composer.json", "artisan" }),
+            require_cwd = true,
+            args = function(self, ctx)
+              local root = self.cwd and self.cwd(self, ctx)
+              local config_path = root and (root .. "/pint.json") or nil
+
+              if config_path and vim.fn.filereadable(config_path) == 1 then
+                return { "--config", config_path, "$FILENAME" }
+              end
+
+              return { "$FILENAME" }
+            end,
+            stdin = false,
+          },
+        },
+        formatters_by_ft = {
+          bash = { "shfmt" },
+          css = { "prettier" },
+          go = { "gofmt" },
+          html = { "prettier" },
+          javascript = { "prettier" },
+          javascriptreact = { "prettier" },
+          json = { "prettier" },
+          lua = { "stylua" },
+          markdown = { "prettier" },
+          php = { "pint" },
+          python = { "ruff_format" },
+          rust = { "rustfmt" },
+          sh = { "shfmt" },
+          toml = { "taplo" },
+          typescript = { "prettier" },
+          typescriptreact = { "prettier" },
+          yaml = { "prettier" },
+          zsh = { "shfmt" },
+        },
+        format_on_save = function(bufnr)
+          if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+            return
+          end
+          if vim.bo[bufnr].filetype == "php" then
+            return {
+              timeout_ms = 10000,
+              lsp_format = "never",
+            }
+          end
+          return {
+            timeout_ms = 500,
+            lsp_format = "fallback",
+          }
+        end,
+      }
+    end,
+  },
+  {
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPost", "BufNewFile" },
+    config = function()
+      local lint = require("lint")
+      local php_root_markers = { "composer.json", "artisan" }
+      local phpstan = lint.linters.phpstan
+
+      if phpstan then
+        lint.linters.phpstan = function()
+          local linter = type(phpstan) == "function" and phpstan() or vim.deepcopy(phpstan)
+          local bufname = vim.api.nvim_buf_get_name(0)
+          local root = vim.fs.root(bufname, php_root_markers) or vim.fn.getcwd()
+          local local_bin = root .. "/vendor/bin/phpstan"
+
+          if vim.fn.executable(local_bin) == 1 then
+            linter.cmd = local_bin
+          end
+
+          linter.cwd = root
+          return linter
         end
-        return {
-          timeout_ms = 500,
-          lsp_format = "fallback",
-        }
-      end,
-    },
+      end
+
+      lint.linters_by_ft = {
+        php = { "phpstan" },
+      }
+    end,
   },
   {
     "lewis6991/gitsigns.nvim",

@@ -68,7 +68,11 @@ Helix からの移行を前提に、Neovim 0.11 系で使いやすい最小構�
 
 - `stevearc/conform.nvim`
   説明: 保存時フォーマットを担当します。
-  利用理由: LSP format と外部 formatter の切り替えが扱いやすいためです。
+  利用理由: LSP format と外部 formatter の切り替えが扱いやすいためです。PHP は Laravel 向けに `pint` へ固定しています。
+
+- `mfussenegger/nvim-lint`
+  説明: 外部 linter の結果を `vim.diagnostic` に流し込みます。
+  利用理由: Laravel では PHP の診断を `phpstan + larastan` に寄せたいためです。
 
 - `lewis6991/gitsigns.nvim`
   説明: hunk 差分、blame、preview を表示します。
@@ -191,5 +195,7 @@ Helix からの移行を前提に、Neovim 0.11 系で使いやすい最小構�
 - `phpactor` は負荷軽減のため `vendor` 全体を index 対象から外し、`file_events` と更新時 diagnostics を止めています。Laravel では補完と診断を主に `intelephense` に任せています。
 - PHP 系 LSP の root は `.git` より `composer.json` と `artisan` を優先するため、Laravel では `backend` をプロジェクトルートとして扱います。
 - PHP では補完を `intelephense` に寄せるため、`phpactor` の `completionProvider` は無効化しています。
-- formatter は `stylua`, `shfmt`, `prettier`, `rustfmt`, `gofmt`, `ruff_format`, `taplo` を想定しています。
+- PHP の保存時整形は `vendor/bin/pint` を優先して使います。
+- PHP の診断は `nvim-lint` 経由で `vendor/bin/phpstan` を優先して使います。Laravel では `composer require --dev laravel/pint phpstan/phpstan larastan/larastan` を前提にしています。
+- formatter は `stylua`, `shfmt`, `prettier`, `rustfmt`, `gofmt`, `ruff_format`, `taplo`, `pint` を想定しています。
 - 外部ツールの導入は `:Mason` から追加できます。

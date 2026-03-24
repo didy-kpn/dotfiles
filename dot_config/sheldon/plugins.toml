@@ -27,6 +27,10 @@ github = 'zsh-users/zsh-autosuggestions'
 github = 'hlissner/zsh-autopair'
 # apply = ['defer']
 
+[plugins.zsh-abbr]
+github = 'olets/zsh-abbr'
+use = ['zsh-abbr.zsh']
+
 # Syntax
 # -----------
 [plugins.fast-syntax-highlighting]
