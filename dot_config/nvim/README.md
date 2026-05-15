@@ -66,6 +66,18 @@ Helix からの移行を前提に、Neovim 0.11 系で使いやすい最小構�
   説明: GitHub Copilot のインライン提案 UI を提供します。
   利用理由: `copilot-language-server` 単体よりグレー表示の補完が安定しやすいためです。提案は `tokyonight` に合わせて水色寄りに強調しています。
 
+- `nvim-neotest/neotest`
+  説明: テストの実行、結果表示、サマリー表示を提供します。
+  利用理由: エディタ内で PHPUnit を回せるようにし、PHP のテスト実行を素早くするためです。Laravel では `vendor/bin/phpunit` を優先して使います。
+
+- `mfussenegger/nvim-dap`
+  説明: DAP クライアントです。
+  利用理由: PHP を Xdebug + `php-debug-adapter` でデバッグできるようにするためです。
+
+- `rcarriga/nvim-dap-ui`
+  説明: DAP の変数、スタック、REPL などの UI を表示します。
+  利用理由: ブレークポイント停止後の状態確認をエディタ内でしやすくするためです。
+
 - `stevearc/conform.nvim`
   説明: 保存時フォーマットを担当します。
   利用理由: LSP format と外部 formatter の切り替えが扱いやすいためです。PHP は Laravel 向けに `pint` へ固定しています。
@@ -160,6 +172,35 @@ Helix からの移行を前提に、Neovim 0.11 系で使いやすい最小構�
 - `<C-g>` (`insert`): Copilot の次候補へ切り替える
 - `blink.cmp` の候補一覧末尾: 補完ソース名を表示 (`LSP`, `Snippets`, `Buffer`, `Path` など)
 
+### テスト
+
+- `<leader>tn`: カーソル位置のテストを実行
+- `<leader>tf`: 現在ファイルのテストを実行
+- `<leader>td`: カーソル位置の PHPUnit テストを `nvim-dap` でデバッグ実行
+- `<leader>tD`: 現在ファイルの PHPUnit テストを `nvim-dap` でデバッグ実行
+- `<leader>tt`: 最後に実行したテストを再実行
+- `<leader>to`: テスト出力を開く
+- `<leader>ts`: テストサマリーを開閉
+- サマリー上の `<CR>`: 選択位置へ移動
+- サマリー上の `r`: 選択したテストまたはスイートを実行
+- サマリー上の `t`: 実行ターゲットを切り替え
+- サマリー上の `o`: 出力を開く
+- サマリー上の `m`: マーク切り替え
+- サマリー上の `M`: マークをクリア
+- サマリー上の `[t` `]t`: 前後の失敗テストへ移動
+- サマリー上の `u`: 実行中テストを停止
+
+### デバッグ
+
+- `<leader>dc`: デバッグ開始 / 継続
+- `<leader>db`: ブレークポイント切り替え
+- `<leader>di`: step into
+- `<leader>do`: step over
+- `<leader>dO`: step out
+- `<leader>du`: DAP UI 開閉
+- `<leader>dr`: DAP REPL 開閉
+- `<leader>dx`: デバッグ終了
+
 ### Git
 
 - `<leader>gg`: LazyGit
@@ -196,6 +237,8 @@ Helix からの移行を前提に、Neovim 0.11 系で使いやすい最小構�
 - PHP 系 LSP の root は `.git` より `composer.json` と `artisan` を優先するため、Laravel では `backend` をプロジェクトルートとして扱います。
 - PHP では補完を `intelephense` に寄せるため、`phpactor` の `completionProvider` は無効化しています。
 - PHP の保存時整形は `vendor/bin/pint` を優先して使います。
+- PHP のテスト実行は `neotest` 経由で `~/.local/bin/phpunit-neotest` を使います。このラッパーは PHP で動作し、`memory_limit=512M` を設定したうえで project の `vendor/bin/phpunit` を探して実行します。`phpunit.xml` または `phpunit.xml.dist` がある Laravel / PHP プロジェクトを前提にしています。
+- PHP のデバッグは `nvim-dap` から `php-debug-adapter` を使います。テストのデバッグ実行 (`<leader>td`, `<leader>tD`) も `neotest` の `dap` strategy ではなく `nvim-dap` 直実行です。ローカル devbox 実行を前提に `pathMappings` は設定していません。Xdebug 側は通常 `client_port=9003` が必要です。
 - PHP の診断は `nvim-lint` 経由で `vendor/bin/phpstan` を優先して使います。Laravel では `composer require --dev laravel/pint phpstan/phpstan larastan/larastan` を前提にしています。
 - formatter は `stylua`, `shfmt`, `prettier`, `rustfmt`, `gofmt`, `ruff_format`, `taplo`, `pint` を想定しています。
 - 外部ツールの導入は `:Mason` から追加できます。

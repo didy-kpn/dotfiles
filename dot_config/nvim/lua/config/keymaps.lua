@@ -85,3 +85,89 @@ keymap.set({ "n", "x" }, "<leader>mn", "<cmd>MultipleCursorsAddJumpNextMatch<cr>
 keymap.set({ "n", "x" }, "<leader>mN", "<cmd>MultipleCursorsAddJumpPrevMatch<cr>", { desc = "Add cursor and previous match", silent = true })
 keymap.set("x", "<leader>mv", "<cmd>MultipleCursorsAddVisualArea<cr>", { desc = "Add cursors to visual lines", silent = true })
 keymap.set({ "n", "x" }, "<leader>ml", "<cmd>MultipleCursorsLockToggle<cr>", { desc = "Toggle cursor lock", silent = true })
+
+keymap.set("n", "<leader>tn", function()
+  require("neotest").run.run()
+end, { desc = "Test nearest" })
+keymap.set("n", "<leader>tf", function()
+  require("neotest").run.run(vim.fn.expand("%"))
+end, { desc = "Test file" })
+
+local function php_test_root()
+  local file = vim.api.nvim_buf_get_name(0)
+  return vim.fs.root(file, { "composer.json", "phpunit.xml", "phpunit.xml.dist", "artisan" }) or vim.fn.getcwd()
+end
+
+local function nearest_phpunit_method()
+  local current_line = vim.api.nvim_win_get_cursor(0)[1]
+  local lines = vim.api.nvim_buf_get_lines(0, 0, current_line, false)
+
+  for i = #lines, 1, -1 do
+    local name = lines[i]:match("function%s+([%w_]+)%s*%(")
+    if name then
+      return name
+    end
+  end
+end
+
+local function php_dap_config(args)
+  local root = php_test_root()
+  return {
+    type = "php",
+    request = "launch",
+    name = "Debug PHPUnit",
+    port = 9003,
+    cwd = root,
+    program = vim.fn.expand("~/.local/bin/phpunit-neotest"),
+    args = args,
+  }
+end
+
+keymap.set("n", "<leader>td", function()
+  local file = vim.fn.expand("%:p")
+  local args = { file }
+  local method = nearest_phpunit_method()
+
+  if method then
+    vim.list_extend(args, { "--filter", "::" .. method .. "( with data set .*)?$" })
+  end
+
+  require("dap").run(php_dap_config(args))
+end, { desc = "Test debug nearest" })
+keymap.set("n", "<leader>tD", function()
+  require("dap").run(php_dap_config({ vim.fn.expand("%:p") }))
+end, { desc = "Test debug file" })
+keymap.set("n", "<leader>tt", function()
+  require("neotest").run.run_last()
+end, { desc = "Test last" })
+keymap.set("n", "<leader>to", function()
+  require("neotest").output.open({ enter = true, auto_close = true })
+end, { desc = "Test output" })
+keymap.set("n", "<leader>ts", function()
+  require("neotest").summary.toggle()
+end, { desc = "Test summary" })
+
+keymap.set("n", "<leader>dc", function()
+  require("dap").continue()
+end, { desc = "Debug continue" })
+keymap.set("n", "<leader>db", function()
+  require("dap").toggle_breakpoint()
+end, { desc = "Debug breakpoint" })
+keymap.set("n", "<leader>di", function()
+  require("dap").step_into()
+end, { desc = "Debug step into" })
+keymap.set("n", "<leader>do", function()
+  require("dap").step_over()
+end, { desc = "Debug step over" })
+keymap.set("n", "<leader>dO", function()
+  require("dap").step_out()
+end, { desc = "Debug step out" })
+keymap.set("n", "<leader>du", function()
+  require("dapui").toggle()
+end, { desc = "Debug UI" })
+keymap.set("n", "<leader>dr", function()
+  require("dap").repl.toggle()
+end, { desc = "Debug REPL" })
+keymap.set("n", "<leader>dx", function()
+  require("dap").terminate()
+end, { desc = "Debug terminate" })

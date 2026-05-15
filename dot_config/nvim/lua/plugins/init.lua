@@ -311,6 +311,103 @@ return {
     end,
   },
   {
+    "nvim-neotest/neotest",
+    cmd = { "Neotest", "NeotestOutputPanel", "NeotestSummary" },
+    dependencies = {
+      "nvim-neotest/nvim-nio",
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "olimorris/neotest-phpunit",
+    },
+    opts = function()
+      return {
+        adapters = {
+          require("neotest-phpunit")({
+            phpunit_cmd = function()
+              return vim.fn.expand("~/.local/bin/phpunit-neotest")
+            end,
+            root_files = { "composer.json", "phpunit.xml", "phpunit.xml.dist", "artisan" },
+            filter_dirs = { ".git", "node_modules", "vendor" },
+          }),
+        },
+        quickfix = {
+          enabled = false,
+        },
+        output = {
+          open_on_run = false,
+        },
+        summary = {
+          mappings = {
+            attach = "<CR>",
+            clear_marked = "M",
+            expand = { "l", "<Right>" },
+            expand_all = "L",
+            jumpto = "i",
+            mark = "m",
+            next_failed = "]t",
+            output = "o",
+            prev_failed = "[t",
+            run = "r",
+            short = "O",
+            stop = "u",
+            target = "t",
+          },
+        },
+      }
+    end,
+    config = function(_, opts)
+      require("neotest").setup(opts)
+    end,
+  },
+  {
+    "mfussenegger/nvim-dap",
+    cmd = { "DapContinue", "DapToggleBreakpoint", "DapStepInto", "DapStepOver", "DapStepOut", "DapTerminate", "DapREPLToggle" },
+    dependencies = {
+      "rcarriga/nvim-dap-ui",
+      "nvim-neotest/nvim-nio",
+    },
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
+      local mason_path = vim.fn.stdpath("data") .. "/mason/packages/php-debug-adapter/extension/out/phpDebug.js"
+
+      vim.api.nvim_set_hl(0, "DapBreakpoint", { fg = "#f7768e", bold = true })
+      vim.api.nvim_set_hl(0, "DapBreakpointRejected", { fg = "#ff9e64", bold = true })
+      vim.api.nvim_set_hl(0, "DapStopped", { fg = "#e0af68", bold = true })
+      vim.fn.sign_define("DapBreakpoint", { text = "B", texthl = "DapBreakpoint", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapBreakpointRejected", { text = "R", texthl = "DapBreakpointRejected", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapStopped", { text = "▶", texthl = "DapStopped", linehl = "", numhl = "" })
+
+      dap.adapters.php = {
+        type = "executable",
+        command = "node",
+        args = { mason_path },
+      }
+
+      dap.configurations.php = {
+        {
+          type = "php",
+          request = "launch",
+          name = "Listen for Xdebug",
+          port = 9003,
+        },
+      }
+
+      dapui.setup({})
+
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+    end,
+  },
+  {
     "mason-org/mason.nvim",
     lazy = false,
     opts = {
