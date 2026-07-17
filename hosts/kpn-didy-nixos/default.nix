@@ -10,6 +10,17 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # RTL8852BE WiFi の TXBD 枯渇問題を回避
+  boot.kernelParams = [
+    "pcie_aspm=off"
+  ];
+
+  # Workaround for Realtek RTL8852BE WiFi PCIe power management bug
+  boot.extraModprobeConfig = ''
+    options rtw89_pci disable_aspm_l1ss=y disable_aspm_l1=y disable_clkreq=y
+    options rtw89_core disable_ps_mode=y
+  '';
+
   networking.hostName = "kpn-didy-nixos"; # Define your hostname.
 
   # Configure network connections interactively with nmcli or nmtui.
@@ -56,7 +67,7 @@
 
   users.users.kpn-didy = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ]; # Enable 'sudo' for the user.
+    extraGroups = [ "kvm" "wheel" "networkmanager" ]; # Enable 'sudo' for the user.
     shell = pkgs.zsh;
   #   packages = with pkgs; [
   #     tree
@@ -90,8 +101,28 @@
       PermitRootLogin = "no";
       PasswordAuthentication = false;
       KbdInteractiveAuthentication = false;
+      AcceptEnv = "TERM_PROGRAM GHOSTTY_RESOURCES_DIR";
     };
   };
+
+  services.tailscale.enable = true;
+
+  services.cloudflared = {
+    enable = true;
+
+    tunnels = {
+      "83a0c8d2-02da-4216-bcb7-5550da92ac45" = {
+        credentialsFile = "/var/lib/cloudflared/ssh.json";
+
+        ingress = {
+          "ssh.kpn-didy.win" = "http://127.0.0.1:22";
+        };
+
+        default = "http_status:404";
+      };
+    };
+  };
+
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

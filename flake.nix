@@ -8,9 +8,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     llm-agents.url = "github:numtide/llm-agents.nix";
+    nix-msb.url = "github:conao3/nix-msb";
   };
 
-  outputs = { self, nixpkgs, home-manager, llm-agents, ... }:
+  outputs = { self, nixpkgs, home-manager, llm-agents, nix-msb, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -25,6 +26,8 @@
           ./hosts/kpn-didy-nixos/default.nix
           home-manager.nixosModules.home-manager
           {
+            nixpkgs.overlays = [ nix-msb.overlays.default ];
+
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.kpn-didy = import ./home.nix;
