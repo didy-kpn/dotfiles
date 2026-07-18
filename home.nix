@@ -82,6 +82,7 @@
     herdr
     hermes-agent
     backlog-md
+    qmd
   ]);
 
   # chezmoi の dot_zshrc / dot_zshenv を ~/.zshrc / ~/.zshenv に展開
