@@ -81,6 +81,7 @@
     sandbox-runtime
     herdr
     hermes-agent
+    backlog-md
   ]);
 
   # chezmoi の dot_zshrc / dot_zshenv を ~/.zshrc / ~/.zshenv に展開
