@@ -9,9 +9,10 @@
     };
     llm-agents.url = "github:numtide/llm-agents.nix";
     nix-msb.url = "github:conao3/nix-msb";
+    open-design.url = "github:nexu-io/open-design";
   };
 
-  outputs = { self, nixpkgs, home-manager, llm-agents, nix-msb, ... }:
+  outputs = { self, nixpkgs, home-manager, llm-agents, nix-msb, open-design, ... }:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
@@ -34,6 +35,7 @@
             home-manager.extraSpecialArgs = {
               inherit llm-agents;
               inherit system;
+              inherit open-design;
             };
           }
         ];

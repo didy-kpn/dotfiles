@@ -1,6 +1,8 @@
-{ config, pkgs, lib, llm-agents, system, ... }:
+{ config, pkgs, lib, llm-agents, system, open-design, ... }:
 
 {
+  imports = [ open-design.homeManagerModules.default ];
+
   home.username = "kpn-didy";
   home.homeDirectory = "/home/kpn-didy";
   home.stateVersion = "25.11";
@@ -125,5 +127,22 @@
     enable = true;
     enableZshIntegration = true;
     nix-direnv.enable = true;
+  };
+
+  # ----------------------------------------
+  # Open Design (デザインエージェント)
+  # ----------------------------------------
+  services.open-design = {
+    enable = true;
+    autoStart = true;
+    webFrontend = {
+      enable = true;
+      # 0.0.0.0 は Caddy では Host matcher になるため、空で全 Host を受ける
+      host = "";
+      allowedOrigins = [
+        "http://100.70.91.62:5174"
+        "http://kpn-didy-nixos.tail7c0eff.ts.net:5174"
+      ];
+    };
   };
 }
