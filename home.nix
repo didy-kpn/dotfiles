@@ -1,8 +1,6 @@
-{ config, pkgs, lib, llm-agents, system, open-design, ... }:
+{ config, pkgs, lib, llm-agents, system, ... }:
 
 {
-  imports = [ open-design.homeManagerModules.default ];
-
   home.username = "kpn-didy";
   home.homeDirectory = "/home/kpn-didy";
   home.stateVersion = "25.11";
@@ -38,9 +36,6 @@
     sheldon
     yazi
 
-    # --- ターミナルマルチプレクサ ---
-    zellij
-
     # --- microVM ---
     microsandbox
 
@@ -65,6 +60,7 @@
     # --- 開発言語 (Python) ---
     python3
     pyright
+    uv
 
     # --- 開発言語 (Node.js) ---
     nodejs
@@ -78,8 +74,10 @@
     bubblewrap
     socat
   ] ++ (with llm-agents.packages.${system}; [
+    dsh
     pi
     opencode
+    opencode2
     sandbox-runtime
     herdr
     hermes-agent
@@ -127,22 +125,5 @@
     enable = true;
     enableZshIntegration = true;
     nix-direnv.enable = true;
-  };
-
-  # ----------------------------------------
-  # Open Design (デザインエージェント)
-  # ----------------------------------------
-  services.open-design = {
-    enable = true;
-    autoStart = true;
-    webFrontend = {
-      enable = true;
-      # 0.0.0.0 は Caddy では Host matcher になるため、空で全 Host を受ける
-      host = "";
-      allowedOrigins = [
-        "http://100.70.91.62:5174"
-        "http://kpn-didy-nixos.tail7c0eff.ts.net:5174"
-      ];
-    };
   };
 }

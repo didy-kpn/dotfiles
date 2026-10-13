@@ -35,6 +35,7 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
+  i18n.extraLocales = [ "ja_JP.UTF-8/UTF-8" ];
   console = {
      font = "lat9w-16"; # ter-v16n requires terminus_font package; use built-in fallback
      keyMap = "jp106";
