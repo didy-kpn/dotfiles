@@ -16,6 +16,7 @@
     cloudflared
     gnumake
     gcc
+    openssl
 
     # --- CLI 代替 ---
     eza
